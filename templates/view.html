@@ -1,0 +1,16 @@
+{% extends 'main.html '%}
+{% load static %}
+{% block content %}
+
+
+<div class="row ">
+    <div class="col-lg-4">
+        <img class="" src="{{product.image.url}}" alt="">
+    </div>
+    <div class="col-lg-4">
+        <h2>Product Name :   {{product.name}}</h2><br>
+        <h2>Price :   {{product.price}} </h2><br>
+        
+    </div>
+</div>
+{% endblock%}

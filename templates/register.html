@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+    <h2>HVjuqevh</h2>
+    <form action="" method="post">
+        <div class="messages">
+            {% if email.errors %}
+            <div class="alert alert-danger" role="alert">Email already Exist</div> 
+            {% endif %}
+        </div>
+        {% csrf_token %}
+        Email<input type="text" name="email" id="email"><br>
+        username<input type="text" name="username" id="username"><br>
+        Password<input type="password" name="password1" id="password1"><br>
+        Confirm<input type="password" name="password2" id="password2">
+        <input type="submit" value="Register">
+    </form>
+{% endblock %}

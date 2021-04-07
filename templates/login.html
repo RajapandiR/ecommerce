@@ -1,0 +1,10 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        Email<input type="text" name="email" id="email"><br>
+        Password<input type="password" name="password" id="password">
+        <input type="submit" value="Login">
+    </form>
+{% endblock %}
