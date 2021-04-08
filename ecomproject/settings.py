@@ -91,6 +91,11 @@ DATABASES = {
 #     }
 # }
 
+import dj_database_url
+
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
+
 #Authentication backends
 AUTHENTICATION_BACKENDS = (
         'django.contrib.auth.backends.ModelBackend',
