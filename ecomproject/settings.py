@@ -25,8 +25,8 @@ SECRET_KEY = 'jwt@9n9f5_qm(xy5+bn52pugo+$!zu%=1i9$un7iqw_of(nxau'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ecommerces-webs.herokuapp.com', '127.0.01']
-
+ALLOWED_HOSTS = ['ecommerces-webs.herokuapp.com', '127.0.0.1']
+# ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -74,12 +74,12 @@ WSGI_APPLICATION = 'ecomproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
