@@ -30,7 +30,7 @@ class UserManager(BaseUserManager):
 		user.save(using=self._db)
 		return user
 
-class User1(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
 	username = models.CharField(max_length=100, null=True, unique= True)
 	email = models.EmailField(max_length=100, unique= True)
 	first_name = models.CharField(max_length=100, null=True)
@@ -88,7 +88,7 @@ class Product(models.Model):
 			})
 
 class Order(models.Model):
-	customer = models.ForeignKey(User1, on_delete=models.CASCADE,blank=True, null=True)
+	customer = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
 	# total = models.IntegerField(null=True)
 	created_on = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -124,7 +124,7 @@ class OrderItem(models.Model):
 
 class Shipping(models.Model):
 	order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
-	customer = models.ForeignKey(User1, on_delete=models.CASCADE, null=True)
+	customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 	address = models.CharField(max_length=100, null=True)
 	city = models.CharField(max_length=100, null=True)
 	zipcode = models.CharField(max_length=100, null=True)

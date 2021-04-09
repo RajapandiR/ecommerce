@@ -145,4 +145,4 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/image/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/image')
 
-AUTH_USER_MODEL ='ecomapp.User1'
+AUTH_USER_MODEL ='ecomapp.User'

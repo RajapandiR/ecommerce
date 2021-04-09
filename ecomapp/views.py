@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404, redirect
 from django.http import JsonResponse
 import json
 from django.views.generic import DetailView
-from ecomapp import models, utils, forms
+from ecomapp import models, utils
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
