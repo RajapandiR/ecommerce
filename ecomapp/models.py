@@ -66,7 +66,7 @@ class Product(models.Model):
 	# 	('Tax (15%)', 'Tax (15%)'),
 	# 	('Tax (18%)', 'Tax (18%)'),
 	# )
-	image = models.ImageField(null=True,blank=True)
+	image = models.ImageField()
 	name = models.CharField(max_length=100, null=True)
 	# reference = models.CharField(max_length=100, null=True)
 	# category =  models.ForeignKey(Category, on_delete=models.CASCADE,null=True)
