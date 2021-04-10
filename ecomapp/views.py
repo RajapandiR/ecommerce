@@ -17,7 +17,7 @@ def register(req):
         password1= req.POST['password1']
         password2= req.POST['password2']
         try:
-            x = models.User1.objects.get(email=email)
+            x = models.User.objects.get(email=email)
         
             if x.email == email :
                 messages.warning(req,"Already taken")
