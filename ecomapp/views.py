@@ -28,6 +28,7 @@ def register(req):
             messages.warning(req,"Password Doesn't match")
             return redirect('register')
         models.User.objects.create_user(username=username, email=email, password=password1)
+        messages.warning(request,"Register successfull")
         return redirect('/')
     return render(req, "register.html")
 
