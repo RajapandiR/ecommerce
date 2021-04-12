@@ -138,7 +138,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 STATICFILES_DIRS = [
@@ -147,5 +147,9 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/image/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/image')
+
+MEDIAFILES_DIRS = [
+    (os.path.join(BASE_DIR, 'image')
+]
 
 AUTH_USER_MODEL ='ecomapp.User'
