@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'jwt@9n9f5_qm(xy5+bn52pugo+$!zu%=1i9$un7iqw_of(nxau'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['ecommerces-webs.herokuapp.com', '127.0.0.1']
 # ALLOWED_HOSTS = []
