@@ -82,16 +82,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'ecom',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': 3306
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ecom',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': 3306
+    }
+}
 
 import dj_database_url
 
@@ -139,7 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -154,11 +154,11 @@ STATICFILES_DIRS = [
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
 MEDIA_URL = '/image/'
-MEDIA_ROOT = os.path.join(BASE_DIR, "static/image")
+MEDIA_ROOT = os.path.join(BASE_DIR, "image")
 
-# MEDIAFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'image')
-# ]
+MEDIAFILES_DIRS = [
+    os.path.join(BASE_DIR, 'image')
+]
 
 AUTH_USER_MODEL ='ecomapp.User'
 
