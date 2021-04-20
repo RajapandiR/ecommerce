@@ -9,10 +9,35 @@
             {% endif %}
         </div>
         {% csrf_token %}
-        Email<input type="text" name="email" id="email"><br>
-        username<input type="text" name="username" id="username"><br>
-        Password<input type="password" name="password1" id="password1"><br>
-        Confirm<input type="password" name="password2" id="password2">
-        <input type="submit" value="Register">
+        <h5>Email</h5><input type="text" class="form-control" name="email" id="email"><br>
+        <h5>User Name</h5>username<input type="text" class="form-control" name="username" id="username"><br>
+        Password<input type="password" class="form-control" name="password1" id="password1"><br>
+        Confirm<input type="password" class="form-control" name="password2" id="password2"><br>
+        <!-- <input type="submit" class="btn btn-info" value="Register" > -->
+        <center><button class="btn btn-success" >Register</button></center>
+        <!-- <div class="background">
+            <div class="register">
+                <h2>Register</h2>
+                <div class="title">
+                    <h3>UserName</h3>
+                    <input type="text" name="username" id="username" placeholder="User Name">
+                    <h3>Email</h3>
+                    <input type="text"name="email" id="email"  placeholder="Mail id"/>
+
+                    <h3>Password</h3>
+                    <input type="password" name="password1" id="password1" placeholder="Password"/>
+
+                    <h3>Confirm Password</h3>
+                    <input type="password" name="password2" id="password2" placeholder="Confirm Password"/>
+                </div>
+                <div>
+                    <button class="btn-book1">
+                        <a href="">Register</a> 
+                    </button>
+                </div>
+                
+             
+            </div>
+        </div> -->
     </form>
 {% endblock %}

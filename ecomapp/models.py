@@ -1,4 +1,6 @@
 from django.db import models
+import random
+import os
 
 # Create your models here.
 from django.contrib.auth.models import AbstractBaseUser
@@ -7,6 +9,18 @@ from django.contrib.auth.models import BaseUserManager
 from django.conf import settings
 from django.shortcuts import reverse
 from django.contrib.auth.hashers import make_password
+
+
+def get_file_extension(filepath):
+    basename = os.path.basename(filepath)
+    name, ext = basename.split('.')
+    return name, ext
+
+def upload_file_path(instance, filename):
+    new_filename = random.randint(1, 464654165)
+    name, ext = get_file_extension(filename)
+    final_filename = f'{new_filename}.{ext}'
+    return f'products/{new_filename}/{final_filename}'
 
 class UserManager(BaseUserManager):
 
@@ -40,6 +54,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	# zipcode = models.CharField(max_length=100, null=True)
 	# country = models.CharField(max_length=100, null=True)
 	# state = models.CharField(max_length=100, null=True)
+	is_forget = models.BooleanField(default = False) 
 	is_active = models.BooleanField(default = True)
 	is_staff = models.BooleanField(default = False)
 
@@ -57,6 +72,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 	def has_module_perms(self, app_label):
 		return True
 
+class Category(models.Model):
+	name = models.CharField(max_length=100, null=True)
+	status = models.CharField(max_length=6, default='Active')
+	created_on = models.DateTimeField(auto_now=True, null=True)
+
+	def __str__(self):
+		return self.name
 
 class Product(models.Model):
 	# TAXRULE = (
@@ -66,10 +88,10 @@ class Product(models.Model):
 	# 	('Tax (15%)', 'Tax (15%)'),
 	# 	('Tax (18%)', 'Tax (18%)'),
 	# )
-	image = models.ImageField()
+	image = models.ImageField(upload_to=upload_file_path, null=True)
 	name = models.CharField(max_length=100, null=True)
 	# reference = models.CharField(max_length=100, null=True)
-	# category =  models.ForeignKey(Category, on_delete=models.CASCADE,null=True)
+	category =  models.ForeignKey(Category, on_delete=models.CASCADE,null=True)
 	price = models.IntegerField(null=True)
 	slug = models.SlugField(blank=True, null=True)
 	# taxexcl =  models.IntegerField(null=True)

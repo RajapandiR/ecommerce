@@ -1,0 +1,9 @@
+{% autoescape off %}
+
+Hi {{user.username}}
+
+Please use the link below to forget password.
+
+http://{{domain}}{% url 'forget' uidb64=uid token=token %}
+
+{% endautoescape %}

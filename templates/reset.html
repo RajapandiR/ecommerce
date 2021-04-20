@@ -1,0 +1,9 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <h5>Email</h5><input type="test" class="form-control" name="email" id="email"><br>
+    <center><button class="btn btn-success" >Reset Password</button></center>
+</form>
+{% endblock %}

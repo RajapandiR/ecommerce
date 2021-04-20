@@ -7,8 +7,10 @@
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" /> -->
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1" />
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  
     <title>Main</title>
   <script type="text/javascript">
     var user = '{{request.user}}'
@@ -62,14 +64,26 @@
             <li class="nav-item active">
               <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
             </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="">Shirt <span class="sr-only"></span></a>
+            </li>
             
           </ul>
           {% if request.user.is_authenticated %}
-          <div class="form-inline my-2 my-lg-0">
-            <!-- <strong>{{request.user}}</strong> -->
+          <!-- <div class="form-inline my-2 my-lg-0">
+         
             <a style="color:white">{{request.user}}</span></a>
             <div><a href="/logout"><button class="btn btn-success">Logout</button></a></div>
-          </div>
+          </div> -->
+          <div class="navbar-nav ml-auto">              
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="color:white">{{request.user.username}}</a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <!-- <a href="#" class="dropdown-item">View Profile</a> -->
+                <a href="/change-password" class="dropdown-item">Change Password</a>
+                <div class="dropdown-divider"></div>
+                <a href="/logout"class="dropdown-item">Logout</a>
+            </div>
+        </div>
           {% else %}
             
           <div class="form-inline my-2 my-lg-0">
@@ -85,6 +99,8 @@
            <p id="cart-total">{{cartItem}}</p>
 
        </div>
+
+     
         </div>
       </nav>
     <div class="container">
