@@ -1,0 +1,37 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<div class="product-view">
+<section class="product-title">
+    <div class="product-left">
+        <div class="product-img">
+            <img src="{{product.image.url}}"  class="product-image">
+        </div>
+        <div class="product-left-desc">
+            <h3>{{product.name}}</h3>
+            <h6 style="font-weight: bold;">Price <span style="color:#B12704">₹ {{product.price}} </span></h6>
+            <!-- <h4>Average Rating</h4>
+            <div class="stars">
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+                <i class="fa fa-star" aria-hidden="true"></i>
+            </div> -->
+
+            <h6>Color: Red</h6>
+            <h6>Size: M L XL</h6>
+            <p>Care Instructions: Machine Wash<br>
+                Fit Type: Regular Fit<br>
+                Polo T-Shirt in Super Combed Cotton<br>
+                Colourblocked Polo Collar T-shirt<br>
+                Biowashed Polo<br>
+                Short Sleeves<br>
+                Powered with Shrinkless Technology & Be-Fit Algorithim</p>
+                <button data-product={{product.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add to Cart</button>        
+        </div>
+        
+    </div>
+</section>
+</div>
+{% endblock %}
