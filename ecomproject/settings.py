@@ -13,7 +13,13 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 
+<<<<<<< HEAD
 # import django_heroku
+=======
+import django_heroku
+
+# import django_heroku 
+>>>>>>> 40530af0fc51a211e23f8a04409d5b71b0c6dfa3
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,6 +34,10 @@ SECRET_KEY = 'jwt@9n9f5_qm(xy5+bn52pugo+$!zu%=1i9$un7iqw_of(nxau'
 DEBUG = True
 
 # ALLOWED_HOSTS = ['ecommerces-webs.herokuapp.com', '127.0.0.1']
+<<<<<<< HEAD
+=======
+
+>>>>>>> 40530af0fc51a211e23f8a04409d5b71b0c6dfa3
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -185,10 +195,15 @@ AUTH_USER_MODEL ='ecomapp.User'
 
 # django_heroku.settings(locals())
 
+<<<<<<< HEAD
 
 #SMTP Configuration
 
 
+=======
+
+#SMTP Configuration 
+>>>>>>> 40530af0fc51a211e23f8a04409d5b71b0c6dfa3
 from ecomapp import config
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
