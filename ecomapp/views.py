@@ -265,7 +265,7 @@ def resetPassword(request):
             user.save()
             sendMail(user, request)
             messages.success(request, 'Click the link in the E-Mail')
-            # print("user", user)
+            print("user", user)
             # uid = urlsafe_base64_encode(force_bytes(user.pk))
             # token = utils.generate_token.make_token(user)
             # # token = RefreshToken.for_user(user).access_token
