@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block content %}
-    <h2>Register </h2>
+    <center><h2>Register </h2></center>
     <form action="" method="post">
         <div class="messages">
             {% if email.errors %}
@@ -9,10 +9,10 @@
             {% endif %}
         </div>
         {% csrf_token %}
-        <h5>Email</h5><input type="text" class="form-control" name="email" id="email"><br>
-        <h5>User Name</h5><input type="text" class="form-control" name="username" id="username"><br>
-        <h5>Password</h5>Password<input type="password" class="form-control" name="password1" id="password1"><br>
-        <h5>Confirm Password</h5><input type="password" class="form-control" name="password2" id="password2"><br>
+        <h5>Email</h5><input type="text" class="form-control" name="email" id="email" required><br>
+        <h5>User Name</h5><input type="text" class="form-control" name="username" id="username" required><br>
+        <h5>Password</h5><input type="password" class="form-control" name="password1" id="password1" required><br>
+        <h5>Confirm Password</h5><input type="password" class="form-control" name="password2" id="password2" required><br>
         <!-- <input type="submit" class="btn btn-info" value="Register" > -->
         <center><button class="btn btn-success" >Register</button></center>
         <!-- <div class="background">
