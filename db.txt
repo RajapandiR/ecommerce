@@ -1,0 +1,9 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'RajapandiRRP$mysql',
+        'USER': 'RajapandiRRP',
+        'PASSWORD': 'pandian12',
+        'HOST': 'RajapandiRRP.mysql.pythonanywhere-services.com',
+    }
+}
