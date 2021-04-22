@@ -87,25 +87,25 @@ WSGI_APPLICATION = 'ecomproject.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ecomapp',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': 3306
-    }
-}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'RajapandiRRP$mysql',
-#         'USER': 'RajapandiRRP',
-#         'PASSWORD': 'pandian12',
-#         'HOST': 'RajapandiRRP.mysql.pythonanywhere-services.com',
+#         'NAME': 'ecomapp',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': 3306
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'RajapandiRRP$mysql',
+        'USER': 'RajapandiRRP',
+        'PASSWORD': 'pandian12',
+        'HOST': 'RajapandiRRP.mysql.pythonanywhere-services.com',
+    }
+}
 
 import dj_database_url
 
@@ -187,11 +187,12 @@ AUTH_USER_MODEL ='ecomapp.User'
 
 # django_heroku.settings(locals())
 
-from ecomapp import config
+# from ecomapp import config
+from decouple import config
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = config.EMAIL_HOST_PASSWORD
+EMAIL_HOST_USER = config('EMAIL')
+EMAIL_HOST_PASSWORD = config('PASSWORD')
