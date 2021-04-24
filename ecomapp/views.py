@@ -76,8 +76,6 @@ def logout_view(request):
 
 # from django.contrib.sites.models import Site
 def index(req):
-    current_site = get_current_site(req)
-    print("current_site", current_site)
     product = models.Product.objects.all()    
     if req.user.is_authenticated:
         # print(req.user.user)
@@ -320,4 +318,30 @@ def forgetPassword(request, uidb64, token):
     return render(request, "forgetPassword.html")
 
 
-         
+def shirt(request):
+    category = "Shirt"
+    categories = models.Category.objects.filter(name=category)
+    product = models.Product.objects.get(category=categories)
+    print("categories", categories)
+    # product = categories.product_set.all()
+    print("product", product)
+    if req.user.is_authenticated:
+        # print(req.user.user)
+        user = req.user
+        order, created = models.Order.objects.get_or_create(customer=user)
+        items = order.orderitem_set.all()
+        cartItem = order.get_item_total
+    else:
+        # items = []
+        # order = { 'get_cart_total': 0, 'get_item_total': 0}
+        # cartItem = order['get_item_total']
+        cookiesDatas = utils.cookiesData(request)
+        cartItem = cookiesDatas['cartItem'] 
+        order = cookiesDatas['orders'] 
+        items = cookiesDatas['items'] 
+    context = { 
+        "product": categories,
+        "cartItem": cartItem
+        
+    }
+    return render(request, 'shirt.html', context)
