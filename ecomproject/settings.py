@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
     'ecomapp',
-    # 'rest_framework',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
