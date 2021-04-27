@@ -19,9 +19,9 @@ urlpatterns = [
     path('forget-password/<uidb64>/<token>', views.forgetPassword, name='forget'),
     path('shirt/', views.shirt, name='shirt'),
 
-    path('api/user', api.UserApiView.as_view()),
-    path('api/category/', api.CategoryApiView.as_view()),
-    path('api/category/<str:pk>/', api.CategoryApi.as_view()),
+    # path('api/user', api.UserApiView.as_view()),
+    # path('api/category/', api.CategoryApiView.as_view()),
+    # path('api/category/<str:pk>/', api.CategoryApi.as_view()),
 
 
     # path('reset-password/', auth_views.PasswordResetView.as_view(), name="reset_password"), 
