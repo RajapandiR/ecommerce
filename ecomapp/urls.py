@@ -22,9 +22,9 @@ urlpatterns = [
     path('check-success/', views.checkSuccess, name='success'),
     path('order/', views.OrderView, name='order'),
 
-    path('api/user', api.UserApiView.as_view()),
-    path('api/category/', api.CategoryApiView.as_view()),
-    path('api/category/<str:pk>/', api.CategoryApi.as_view()),
+    # path('api/user', api.UserApiView.as_view()),
+    # path('api/category/', api.CategoryApiView.as_view()),
+    # path('api/category/<str:pk>/', api.CategoryApi.as_view()),
 
 
     # path('reset-password/', auth_views.PasswordResetView.as_view(), name="reset_password"), 
