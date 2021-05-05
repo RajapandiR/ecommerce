@@ -18,7 +18,7 @@
         {% for i in orderviews %}
             <tr>
             <th scope="row">{{forloop.counter}}</th>
-            <td><b>{{i.id}}</b></td>
+            <td><b>{{i.orderId}}</b></td>
             {% for j in orderimg %}
             {% if i.cart == j.cart %}
                 <td><img class="row-image" src="{{j.product.image.url}}"></p></td>

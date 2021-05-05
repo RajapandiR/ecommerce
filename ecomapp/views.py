@@ -134,6 +134,9 @@ def check(req):
         order, created = models.Cart.objects.get_or_create(customer=user, is_completed=False)
         items = order.orderitem_set.all()
         cartItem = order.get_item_total
+        if cartItem == 0:
+            messages.warning(req,"Please products select")
+            return redirect('cart')
         id = order.id
         if req.POST:
             name = req.POST['name']
@@ -234,20 +237,30 @@ def productView(req, slug):
         obj.views = obj.views + 1
         obj.save()
         user = req.user
-        order, created = models.Cart.objects.get_or_create(customer=user)
-        items = order.orderitem_set.all()
-        cartItem = order.get_item_total
         signals.product_viewed_signal.send(obj.__class__, instance=obj, request=req)
+        try:
+            order, created = models.Cart.objects.get_or_create(customer=user, is_completed=False)
+            items = order.orderitem_set.all()
+            cartItem = order.get_item_total
+        except:
+            pass
+            cartItem = 0 
+
     else:
         obj = get_object_or_404(models.Product,slug=slug)
         cookiesDatas = utils.cookiesData(req)
+<<<<<<< HEAD
         cartItem = cookiesDatas['cartItem']
         order = cookiesDatas['orders']
         items = cookiesDatas['items']
 
+=======
+        cartItem = cookiesDatas['cartItem'] 
+        # order = cookiesDatas['orders'] 
+        # items = cookiesDatas['items'] 
+        
+>>>>>>> ebefaa426175896f2cf7b6ac3c94d530144fc7f2
     context = {
-        'items': items,
-        'orders': order,
         "cartItem": cartItem,
         "product": obj
     }
@@ -259,12 +272,6 @@ def OrderView(request):
         user = request.user
         orderimg = models.OrderItem.objects.all()
         orderviews = models.Order.objects.all()
-        # order= models.Cart.objects.get(customer=user, is_completed=True)
-        # items = order.orderitem_set.all()
-        # for i in models.Order.objects.all():
-        #     print(i.cart)
-        #     for j in models.OrderItem.objects.all():
-        #         if i.cart == j.cart:
         try:
             order= models.Cart.objects.get(customer=user, is_completed=False)
             items = order.orderitem_set.all()
@@ -415,11 +422,27 @@ def UserProductHistory(request):
     if request.user.is_authenticated:
         c_type = ContentType.objects.get_for_model(models.Product)
         qs = models.ProductViewed.objects.filter(content_type=c_type, user=request.user)
-        context = {
-            "qs": qs
-        }
-        return render(request, 'productview.html', context)
+        try:
+            order, created = models.Cart.objects.get_or_create(customer=user, is_completed=False)
+            items = order.orderitem_set.all()
+            cartItem = order.get_item_total
+        except:
+            pass
+            cartItem = 0 
+
     else:
-        messages.warning(request,"Please Login")
-        return redirect('/')
+        obj = get_object_or_404(models.Product,slug=slug)
+        cookiesDatas = utils.cookiesData(req)
+        cartItem = cookiesDatas['cartItem'] 
+        # order = cookiesDatas['orders'] 
+        # items = cookiesDatas['items'] 
+            
+    context = {
+        "qs": qs,
+        "cartItem": cartItem,
+    }
+    return render(request, 'productview.html', context)
+    # else:
+    #     messages.warning(request,"Please Login")
+    #     return redirect('/')
 
