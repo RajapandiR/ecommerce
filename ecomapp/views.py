@@ -387,28 +387,28 @@ def forgetPassword(request, uidb64, token):
     return render(request, "forgetPassword.html")
 
 
-def shirt(request):
-    category = "Shirt"
-    categories = models.Category.objects.filter(name=category)
-    product = models.Product.objects.get(category=categories)
-    print("categories", categories)
-    print("product", product)
-    if req.user.is_authenticated:
-        user = req.user
-        order, created = models.Cart.objects.get_or_create(customer=user)
-        items = order.orderitem_set.all()
-        cartItem = order.get_item_total
-    else:
-        cookiesDatas = utils.cookiesData(request)
-        cartItem = cookiesDatas['cartItem'] 
-        order = cookiesDatas['orders'] 
-        items = cookiesDatas['items'] 
-    context = { 
-        "product": categories,
-        "cartItem": cartItem
+# def shirt(request):
+#     category = "Shirt"
+#     categories = models.Category.objects.filter(name=category)
+#     product = models.Product.objects.get(category=categories)
+#     print("categories", categories)
+#     print("product", product)
+#     if req.user.is_authenticated:
+#         user = req.user
+#         order, created = models.Cart.objects.get_or_create(customer=user)
+#         items = order.orderitem_set.all()
+#         cartItem = order.get_item_total
+#     else:
+#         cookiesDatas = utils.cookiesData(request)
+#         cartItem = cookiesDatas['cartItem'] 
+#         order = cookiesDatas['orders'] 
+#         items = cookiesDatas['items'] 
+#     context = { 
+#         "product": categories,
+#         "cartItem": cartItem
         
-    }
-    return render(request, 'shirt.html', context)
+#     }
+#     return render(request, 'shirt.html', context)
 
 @login_required(login_url='/login')
 def UserProductHistory(request):
