@@ -198,6 +198,19 @@ class OrderItem(models.Model):
 	def get_total(self):
 		return self.product.price * self.quantity
 class Order(models.Model):
+	def increment_order_number():
+		last_orderId = Order.objects.all().order_by('id').last()
+		if not last_orderId:
+		     return 'XXX0001'
+		orderId = last_orderId.orderId
+		invoice_int = int(orderId.split('XXX')[-1])
+		width = 4
+		new_invoice_int = invoice_int + 1
+		formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
+		new_invoice_no = 'XXX' + str(formatted)
+		return new_invoice_no
+
+	orderId = models.CharField(max_length=500, default=increment_order_number, null=True, blank=True)
 	cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
 	total = models.IntegerField(null=True, default=0)
 	method = models.CharField(max_length=100, null=True)
