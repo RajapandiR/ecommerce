@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<h2>My Orders</h2>
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+        <th scope="col">S.NO</th>
+        <th scope="col">Order Id</th>
+        <th scope="col=2">Product</th>
+        <th scope="col">Method</th>
+        <th scope="col">Total cost</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+        {% for i in orderviews %}
+            <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td><b>{{i.id}}</b></td>
+            {% for j in orderimg %}
+            {% if i.cart == j.cart %}
+                <td><img class="row-image" src="{{j.product.image.url}}"></p></td>
+                {% endif %}
+            {% endfor %}
+            <td><b>{{i.method}}</b></td>
+            <td><b>{{i.total}}</b></td>
+            </tr>
+         {% endfor %}
+    
+</table>
+<!-- {% for i in items %}
+<div class="cart-row">
+    <div style="flex:2"><img class="row-image" src="{{i.product.image.url}}"></div>
+    <div style="flex:2"><p>{{i.product.name}}</p></div>
+    <div style="flex:1"><p>{{i.product.price}}</p></div>
+    
+</div>
+{% endfor %} -->
+{% endblock %}

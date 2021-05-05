@@ -10,7 +10,6 @@ urlpatterns = [
     path('check/', views.check, name='check'),
     path('product/<slug>/', views.productView, name='product'),
     path('update-item/', views.updateItem, name='updateItem'),
-    path('check-box/', views.checkbox, name='checkbox'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout_view'),
     path('register/', views.register, name='register'),
@@ -18,10 +17,14 @@ urlpatterns = [
     path('reset-password/', views.resetPassword, name='resetPassword'),
     path('forget-password/<uidb64>/<token>', views.forgetPassword, name='forget'),
     path('shirt/', views.shirt, name='shirt'),
+    # path('checkcontinue/', views.checkcontinue, name='checkcontinue'),
+    path('history/', views.UserProductHistory, name='history'),
+    path('check-success/', views.checkSuccess, name='success'),
+    path('order/', views.OrderView, name='order'),
 
-    # path('api/user', api.UserApiView.as_view()),
-    # path('api/category/', api.CategoryApiView.as_view()),
-    # path('api/category/<str:pk>/', api.CategoryApi.as_view()),
+    path('api/user', api.UserApiView.as_view()),
+    path('api/category/', api.CategoryApiView.as_view()),
+    path('api/category/<str:pk>/', api.CategoryApi.as_view()),
 
 
     # path('reset-password/', auth_views.PasswordResetView.as_view(), name="reset_password"), 

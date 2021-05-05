@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<h2>Product Views</h2>
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+        <th scope="col">S.NO</th>
+        <th scope="col">Product Name</th>
+        <th scope="col">User</th>
+        <th scope="col">Viewed Time</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for i in qs %}
+        <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{i.content_object}}</td>
+        <td>{{i.user.username}}</td>
+        <td>{{i.timestamp}}</td>
+        
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+

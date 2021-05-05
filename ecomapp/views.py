@@ -2,7 +2,7 @@ from django.shortcuts import render,get_object_or_404, redirect
 from django.http import JsonResponse
 import json
 from django.views.generic import DetailView
-from ecomapp import models, utils
+from ecomapp import models, utils, signals
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -17,10 +17,10 @@ from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 
-
+from django.contrib.contenttypes.models import ContentType
 
 # from rest_framework_simplejwt.tokens import RefreshToken
-# Create your views here.
+# Create your views here
 
 def register(req):
     
@@ -47,7 +47,6 @@ def register(req):
             messages.warning(req,"Password Doesn't match")
             return redirect('register')
         models.User.objects.create_user(username=username, email=email, password=password1)
-        
         messages.success(req,"Register successfull")
         return redirect('/')
     return render(req, "register.html")
@@ -60,11 +59,11 @@ def login_view(request):
     if request.POST:
         email = request.POST['email']
         password= request.POST['password']
-        # user = authenticate(email =  email, password = password)
         user = authenticate(email =  email, password = password)
         print(user)
         if user:
             login(request, user)
+            request.session.set_expiry(3600) # 1hour 
             return redirect('/')
         if not authenticate(email =  email, password = password):
             messages.warning(request,"Invalid Login")
@@ -74,15 +73,17 @@ def logout_view(request):
     logout(request)
     return redirect('/')
 
-# from django.contrib.sites.models import Site
 def index(req):
     product = models.Product.objects.all()    
     if req.user.is_authenticated:
-        # print(req.user.user)
         user = req.user
-        order, created = models.Order.objects.get_or_create(customer=user)
-        items = order.orderitem_set.all()
-        cartItem = order.get_item_total
+        try:
+            order= models.Cart.objects.get(customer=user, is_completed=False)
+        #   items = order.orderitem_set.all()
+            cartItem = order.get_item_total
+        except:
+            pass
+            cartItem = 0
     else:
         # items = []
         # order = { 'get_cart_total': 0, 'get_item_total': 0}
@@ -94,25 +95,31 @@ def index(req):
     context = { 
         "product": product,
         "cartItem": cartItem
-        
     }
     return render(req, 'store.html', context)
 
 def cart(req):
     if req.user.is_authenticated:
-        # print(req.user.user)
         user = req.user
-        order, created = models.Order.objects.get_or_create(customer=user)
+        order, created = models.Cart.objects.get_or_create(customer=user, is_completed=False)
         items = order.orderitem_set.all()
+        # for i in items:
+        #     if i.is_completed == False:
+        #         items = models.CartItem.objects.get(id=i.id)
         cartItem = order.get_item_total
+        id = order.id
+        obj = models.Cart.objects.get(id=id)
+        obj.total = order.get_cart_total
+        obj.save()
+        if order.get_item_total == 0 and order.is_completed == False :
+            obj = models.Cart.objects.get(id=id)
+            obj.delete()
     else:
         cookiesDatas = utils.cookiesData(req)
         cartItem = cookiesDatas['cartItem'] 
         order = cookiesDatas['orders'] 
         items = cookiesDatas['items'] 
-        # cart = json.loads(req.COOKIES['cart'])
-        # print('cart', cart)
-        
+
     context = {
         'items': items,
         'orders': order,
@@ -120,18 +127,36 @@ def cart(req):
     }
     return render(req, 'cart.html', context)
 
+@login_required(login_url='/login')
 def check(req):
     if req.user.is_authenticated:
-        # print(req.user.user)
         user = req.user
-        order, created = models.Order.objects.get_or_create(customer=user)
+        order, created = models.Cart.objects.get_or_create(customer=user, is_completed=False)
         items = order.orderitem_set.all()
         cartItem = order.get_item_total
+        id = order.id
+        if req.POST:
+            name = req.POST['name']
+            address= req.POST['address']
+            city= req.POST['city']
+            state= req.POST['state']
+            zipcode= req.POST['zipcode']
+            country= req.POST['country']
+            payment= req.POST['payment']
+            obj = models.Cart.objects.get(id=id)
+            obj.method = payment
+            obj.save()
+            ship = models.Shipping.objects.get(customer= req.user)
+            if ship == None:
+                models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
+            # ship = models.Shipping.objects.get(customer= req.user)
+            context = {
+                "ship": ship,
+                'orders': order,
+            }
+            return render(req, "checkcontinue.html", context)
         
     else:
-        # items = []
-        # order = { 'get_cart_total': 0, 'get_item_total': 0}
-        # cartItem = order['get_item_total']
         cookiesDatas = utils.cookiesData(req)
         cartItem = cookiesDatas['cartItem'] 
         order = cookiesDatas['orders'] 
@@ -142,7 +167,40 @@ def check(req):
         "cartItem": cartItem
     }
     return render(req, 'check.html', context)
-
+    
+def checkSuccess(request):
+    if request.user.is_authenticated:
+        user = request.user
+        order, created = models.Cart.objects.get_or_create(customer=user, is_completed=False)
+        items = order.orderitem_set.all()
+        cartItem = order.get_item_total
+        ship = models.Shipping.objects.get(customer= request.user)
+        ship_id = ship.id
+        tot = order.get_cart_total
+        method = ship.payment
+        id = order.id
+        obj = models.Cart.objects.get(id=id)
+        obj.is_completed = True
+        obj.address = ship
+        obj.save()
+        
+        models.Order.objects.create(cart=order, total =tot, method=method, address=ship)
+        # obj = models.CartItem.objects.get(order=id,is_completed=False)
+        # print(id)
+        # obj.is_completed = True
+        # obj.save()
+        
+        
+    else:
+        cookiesDatas = utils.cookiesData(request)
+        cartItem = cookiesDatas['cartItem'] 
+        order = cookiesDatas['orders'] 
+        items = cookiesDatas['items'] 
+    context = { 
+        "cartItem": cartItem,
+        "ship": ship,
+    }
+    return render(request, "checksuccess.html")
 
 def updateItem(request):
     data = json.loads(request.body)
@@ -153,8 +211,13 @@ def updateItem(request):
 
     user = request.user
     product = models.Product.objects.get(id=productId)
-    order, created = models.Order.objects.get_or_create(customer=user)
-    orderItem, created = models.OrderItem.objects.get_or_create(order=order, product=product)
+    # x = models.Cart.objects.get(customer=user,is_completed=False)
+    # if x.is_completed == False or x == None:
+    #     order, created = models.Cart.objects.create(customer=user,is_completed=False)
+    # else:
+    #     order = models.Cart.objects.get_or_create(customer=user)
+    order, created = models.Cart.objects.get_or_create(customer=user,is_completed=False)
+    orderItem, created = models.OrderItem.objects.get_or_create(cart=order, product=product)
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
     elif action == 'remove':
@@ -166,24 +229,21 @@ def updateItem(request):
     return JsonResponse('Item was added', safe=False)
 
 def productView(req, slug):
-    # productId = req.GET.get()
-    # obj = models.Product.objects.all()
-    # obj = get_object_or_404(models.Product,slug=slug)
     if req.user.is_authenticated:
-        # print(req.user.user)
         obj = get_object_or_404(models.Product,slug=slug)
+        obj.views = obj.views + 1
+        obj.save()
         user = req.user
-        order, created = models.Order.objects.get_or_create(customer=user)
+        order, created = models.Cart.objects.get_or_create(customer=user)
         items = order.orderitem_set.all()
         cartItem = order.get_item_total
+        signals.product_viewed_signal.send(obj.__class__, instance=obj, request=req)
     else:
         obj = get_object_or_404(models.Product,slug=slug)
         cookiesDatas = utils.cookiesData(req)
         cartItem = cookiesDatas['cartItem'] 
         order = cookiesDatas['orders'] 
         items = cookiesDatas['items'] 
-        # cart = json.loads(req.COOKIES['cart'])
-        # print('cart', cart)
         
     context = {
         'items': items,
@@ -191,22 +251,42 @@ def productView(req, slug):
         "cartItem": cartItem,
         "product": obj
     }
-    # context = {
-    #     "product": obj
-    # }
     return render(req, "product.html", context)
-# class view(DetailView):
-#     model = models.Product
-#     template_name = "view.html"
-#     def get(self):
+
+@login_required(login_url='/login')        
+def OrderView(request):
+    if request.user.is_authenticated:
+        user = request.user
+        orderimg = models.OrderItem.objects.all()
+        orderviews = models.Order.objects.all()
+        # order= models.Cart.objects.get(customer=user, is_completed=True)
+        # items = order.orderitem_set.all()
+        # for i in models.Order.objects.all():
+        #     print(i.cart)
+        #     for j in models.OrderItem.objects.all():
+        #         if i.cart == j.cart:
+        try:
+            order= models.Cart.objects.get(customer=user, is_completed=False)
+            items = order.orderitem_set.all()
+            cartItem = order.get_item_total
+        except Exception as e:
+            pass
+            cartItem = 0
+            items = {}
+            # orderviews = {}
+            print("Err", e)
+    else:
+        cookiesDatas = utils.cookiesData(request)
+        cartItem = cookiesDatas['cartItem'] 
+        order = cookiesDatas['orders'] 
+        items = cookiesDatas['items'] 
+    context = { 
+        "cartItem": cartItem,
+        "orderviews": orderviews,
+        "orderimg": orderimg
         
-
-def checkbox(req):
-    if req.method == "GET":
-        name = req.GET.get('name', True)
-        print(name)
-    return render(req, "checkbox.html")
-
+    }
+    return render(request, "order.html", context)
 
 # @login_required
 # def change_password(request):
@@ -225,10 +305,8 @@ def checkbox(req):
 #         'form': form
 #     })
 
-@login_required
+@login_required(login_url='/login')
 def change_password(request):
-    print(request.path)
-    # password= request.POST['oldpassword']
     if request.POST:
         password= request.POST['oldpassword']
         password1= request.POST['password1']
@@ -254,9 +332,6 @@ def change_password(request):
 def resetPassword(request):
     if request.POST:
         email= request.POST['email']
-        # print("Email", email)
-        # current_site = get_current_site(request)
-        # print("current_site",current_site)
         try:
             user = models.User.objects.get(email=email)
             user.is_forget = True
@@ -267,13 +342,9 @@ def resetPassword(request):
             # uid = urlsafe_base64_encode(force_bytes(user.pk))
             # token = utils.generate_token.make_token(user)
             # # token = RefreshToken.for_user(user).access_token
-            # print("uid", uid)
-        
-            # print("token", token)
         except Exception as e:
             print("ssss", e)
     return render(request, "reset.html")
-
 
 def sendMail(user, request):
     current_site = get_current_site(request)
@@ -299,7 +370,6 @@ def forgetPassword(request, uidb64, token):
         if request.POST:
             password= request.POST['password1']
             password2= request.POST['password2']
-            
             if password != password2:
                 messages.warning(request,"Password Doesn't match")
                 # return redirect('/forget-password'+'/'+uidb64+'/'+token)
@@ -312,7 +382,6 @@ def forgetPassword(request, uidb64, token):
                 messages.success(request, 'Change the password successfull, Please login')
                 return redirect('/')
     else:       
-        # messages.warning(request, 'The password reset link was invalid, possibly because it has already been used')
         return render(request, "failed.html")
 
     return render(request, "forgetPassword.html")
@@ -323,18 +392,13 @@ def shirt(request):
     categories = models.Category.objects.filter(name=category)
     product = models.Product.objects.get(category=categories)
     print("categories", categories)
-    # product = categories.product_set.all()
     print("product", product)
     if req.user.is_authenticated:
-        # print(req.user.user)
         user = req.user
-        order, created = models.Order.objects.get_or_create(customer=user)
+        order, created = models.Cart.objects.get_or_create(customer=user)
         items = order.orderitem_set.all()
         cartItem = order.get_item_total
     else:
-        # items = []
-        # order = { 'get_cart_total': 0, 'get_item_total': 0}
-        # cartItem = order['get_item_total']
         cookiesDatas = utils.cookiesData(request)
         cartItem = cookiesDatas['cartItem'] 
         order = cookiesDatas['orders'] 
@@ -345,3 +409,17 @@ def shirt(request):
         
     }
     return render(request, 'shirt.html', context)
+
+@login_required(login_url='/login')
+def UserProductHistory(request):
+    if request.user.is_authenticated:
+        c_type = ContentType.objects.get_for_model(models.Product)
+        qs = models.ProductViewed.objects.filter(content_type=c_type, user=request.user)
+        context = {
+            "qs": qs
+        }
+        return render(request, 'productview.html', context)
+    else:
+        messages.warning(request,"Please Login")
+        return redirect('/')
+

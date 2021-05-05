@@ -10,6 +10,10 @@ from django.conf import settings
 from django.shortcuts import reverse
 from django.contrib.auth.hashers import make_password
 
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
+from ecomapp import signals
+
 
 def get_file_extension(filepath):
     basename = os.path.basename(filepath)
@@ -75,6 +79,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Category(models.Model):
 	name = models.CharField(max_length=100, null=True)
 	status = models.CharField(max_length=6, default='Active')
+	parent = models.ForeignKey('self',blank=True, null=True,related_name='child', on_delete=models.CASCADE)
 	created_on = models.DateTimeField(auto_now=True, null=True)
 
 	def __str__(self):
@@ -98,6 +103,7 @@ class Product(models.Model):
 	# taxincl = models.IntegerField(null=True)
 	# taxrule = models.CharField(max_length=100, choices= TAXRULE,null=True)
 	# quantity = models.IntegerField(null=True)
+	views = models.IntegerField(null=True, blank=True, default=0)
 	status = models.CharField(max_length=6, default='Active')
 	created_on = models.DateTimeField(auto_now_add=True, null=True)
 
@@ -109,9 +115,32 @@ class Product(models.Model):
             'slug': self.slug
 			})
 
-class Order(models.Model):
+
+PAYMENT = (
+	("Debit Cart", "Debit Cart"),
+	("Credit Cart", "Credit Cart"),
+	("Cash On Delivery", "Cash On Delivery"),
+)
+class Shipping(models.Model):
+	# order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+	customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+	address = models.CharField(max_length=100, null=True)
+	city = models.CharField(max_length=100, null=True)
+	zipcode = models.CharField(max_length=100, null=True)
+	country = models.CharField(max_length=100, null=True)
+	payment = models.CharField(max_length=100,default='Cash on Delivery', choices=PAYMENT)
+	state = models.CharField(max_length=100, null=True)
+	created_on = models.DateTimeField(auto_now_add=True, null=True)
+
+	def __str__(self):
+		return self.address
+
+class Cart(models.Model):
 	customer = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
-	# total = models.IntegerField(null=True)
+	# payment = models.CharField(max_length=100, null=True)
+	# address = models.ForeignKey(Shipping, on_delete=models.CASCADE,blank=True, null=True)
+	# product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+	is_completed = models.BooleanField(default=False, null=True, blank=True)
 	created_on = models.DateTimeField(auto_now_add=True, null=True)
 
 	@property
@@ -120,39 +149,95 @@ class Order(models.Model):
 		# print(orderitems)
 		d = 0
 		for i in orderitems:
-			d += i.product.price * i.quantity
-			print(d)
+			if self.is_completed == False:
+				d += i.product.price * i.quantity
 		# total =  sum([i.get_total for i in orderitems])
 		return d
-	
-	
+
 	@property
 	def get_item_total(self):
 		orderitems = self.orderitem_set.all()
-		return  sum([i.quantity for i in orderitems])
+		cart = 0
+		for j in orderitems:
+			if self.is_completed == False:
+				cart = sum([i.quantity for i in orderitems])
+		return cart
 	
-	def __str__(self):
-		return str(self.id)
+	# def __str__(self):
+	# 	return str(self.id)
 class OrderItem(models.Model):
-	order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
+	cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
 	product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
 	quantity = models.IntegerField(null=True, default=0)
+	# is_completed = models.BooleanField(default=False, null=True, blank=True)
 	status = models.CharField(max_length=6, default='Active')
 	created_on = models.DateTimeField(auto_now_add=True, null=True)
+
+	# @property
+	# def get_cart_total(self):
+	# 	orderitems = self.order_set.all()
+	# 	# print(orderitems)
+	# 	d = 0
+	# 	for i in orderitems:
+	# 		if i.is_completed == False:
+	# 			d += self.product.price * self.quantity
+	# 	# total =  sum([i.get_total for i in orderitems])
+	# 	return d
+
+	# @property
+	# def get_item_total(self):
+	# 	orderitems = self.order_set.all()
+	# 	cart = 0
+	# 	for j in orderitems:
+	# 		if j.is_completed == False:
+	# 			cart = sum([self.quantity for i in orderitems])
+	# 	return cart
+
 
 	# @proprety
 	def get_total(self):
 		return self.product.price * self.quantity
-
-class Shipping(models.Model):
-	order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True)
-	customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-	address = models.CharField(max_length=100, null=True)
-	city = models.CharField(max_length=100, null=True)
-	zipcode = models.CharField(max_length=100, null=True)
-	country = models.CharField(max_length=100, null=True)
-	state = models.CharField(max_length=100, null=True)
+class Order(models.Model):
+	cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
+	total = models.IntegerField(null=True, default=0)
+	method = models.CharField(max_length=100, null=True)
+	address = models.ForeignKey(Shipping, on_delete=models.CASCADE, null=True)
+	status = models.CharField(max_length=6, default='Active')
 	created_on = models.DateTimeField(auto_now_add=True, null=True)
 
-	def __str__(self):
-		return self.address
+
+
+
+	
+
+
+
+
+# ----------------------
+class ProductViewed(models.Model):
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    ip_address      = models.CharField(max_length=220, null=True, blank=True)
+    content_type    = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id       = models.PositiveIntegerField()
+    content_object  = GenericForeignKey('content_type', 'object_id')
+    timestamp       = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.content_object}"[:20]#" : - Viewed on {self.timestamp}"
+
+    class Meta:
+        ordering = ['-timestamp']
+
+def product_viewed_signal_receiver(sender, instance, request, *args, **kwargs):
+    c_type = ContentType.objects.get_for_model(sender)
+    user = None
+    if request.user.is_authenticated:
+        user = request.user
+    new_object_view_object = ProductViewed.objects.create(
+        user = user,
+        ip_address = request.META.get('REMOTE_ADDR', None),
+        content_type = c_type,
+        object_id = instance.id,
+    )
+
+signals.product_viewed_signal.connect(product_viewed_signal_receiver)
