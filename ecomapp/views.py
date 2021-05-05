@@ -13,7 +13,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str, force_text
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage 
+from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
 
@@ -23,7 +23,7 @@ from django.contrib.contenttypes.models import ContentType
 # Create your views here
 
 def register(req):
-    
+
     if req.POST:
         email = req.POST['email']
         username = req.POST['username']
@@ -42,7 +42,7 @@ def register(req):
                 messages.warning(req,"Username already taken")
                 return redirect('register')
         except:
-            pass   
+            pass
         if password1 != password2:
             messages.warning(req,"Password Doesn't match")
             return redirect('register')
@@ -63,7 +63,7 @@ def login_view(request):
         print(user)
         if user:
             login(request, user)
-            request.session.set_expiry(3600) # 1hour 
+            request.session.set_expiry(3600) # 1hour
             return redirect('/')
         if not authenticate(email =  email, password = password):
             messages.warning(request,"Invalid Login")
@@ -74,7 +74,7 @@ def logout_view(request):
     return redirect('/')
 
 def index(req):
-    product = models.Product.objects.all()    
+    product = models.Product.objects.all()
     if req.user.is_authenticated:
         user = req.user
         try:
@@ -89,10 +89,10 @@ def index(req):
         # order = { 'get_cart_total': 0, 'get_item_total': 0}
         # cartItem = order['get_item_total']
         cookiesDatas = utils.cookiesData(req)
-        cartItem = cookiesDatas['cartItem'] 
-        order = cookiesDatas['orders'] 
-        items = cookiesDatas['items'] 
-    context = { 
+        cartItem = cookiesDatas['cartItem']
+        order = cookiesDatas['orders']
+        items = cookiesDatas['items']
+    context = {
         "product": product,
         "cartItem": cartItem
     }
@@ -116,9 +116,9 @@ def cart(req):
             obj.delete()
     else:
         cookiesDatas = utils.cookiesData(req)
-        cartItem = cookiesDatas['cartItem'] 
-        order = cookiesDatas['orders'] 
-        items = cookiesDatas['items'] 
+        cartItem = cookiesDatas['cartItem']
+        order = cookiesDatas['orders']
+        items = cookiesDatas['items']
 
     context = {
         'items': items,
@@ -146,28 +146,28 @@ def check(req):
             obj = models.Cart.objects.get(id=id)
             obj.method = payment
             obj.save()
-            ship = models.Shipping.objects.get(customer= req.user)
-            if ship == None:
-                models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
             # ship = models.Shipping.objects.get(customer= req.user)
+            # if ship == None:
+            models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
+            ship = models.Shipping.objects.get(customer= req.user)
             context = {
                 "ship": ship,
                 'orders': order,
             }
             return render(req, "checkcontinue.html", context)
-        
+
     else:
         cookiesDatas = utils.cookiesData(req)
-        cartItem = cookiesDatas['cartItem'] 
-        order = cookiesDatas['orders'] 
-        items = cookiesDatas['items'] 
+        cartItem = cookiesDatas['cartItem']
+        order = cookiesDatas['orders']
+        items = cookiesDatas['items']
     context = {
         'items': items,
         'orders': order,
         "cartItem": cartItem
     }
     return render(req, 'check.html', context)
-    
+
 def checkSuccess(request):
     if request.user.is_authenticated:
         user = request.user
@@ -183,20 +183,20 @@ def checkSuccess(request):
         obj.is_completed = True
         obj.address = ship
         obj.save()
-        
+
         models.Order.objects.create(cart=order, total =tot, method=method, address=ship)
         # obj = models.CartItem.objects.get(order=id,is_completed=False)
         # print(id)
         # obj.is_completed = True
         # obj.save()
-        
-        
+
+
     else:
         cookiesDatas = utils.cookiesData(request)
-        cartItem = cookiesDatas['cartItem'] 
-        order = cookiesDatas['orders'] 
-        items = cookiesDatas['items'] 
-    context = { 
+        cartItem = cookiesDatas['cartItem']
+        order = cookiesDatas['orders']
+        items = cookiesDatas['items']
+    context = {
         "cartItem": cartItem,
         "ship": ship,
     }
@@ -225,7 +225,7 @@ def updateItem(request):
     orderItem.save()
     if orderItem.quantity <=0 :
         orderItem.delete()
-    
+
     return JsonResponse('Item was added', safe=False)
 
 def productView(req, slug):
@@ -241,10 +241,10 @@ def productView(req, slug):
     else:
         obj = get_object_or_404(models.Product,slug=slug)
         cookiesDatas = utils.cookiesData(req)
-        cartItem = cookiesDatas['cartItem'] 
-        order = cookiesDatas['orders'] 
-        items = cookiesDatas['items'] 
-        
+        cartItem = cookiesDatas['cartItem']
+        order = cookiesDatas['orders']
+        items = cookiesDatas['items']
+
     context = {
         'items': items,
         'orders': order,
@@ -253,7 +253,7 @@ def productView(req, slug):
     }
     return render(req, "product.html", context)
 
-@login_required(login_url='/login')        
+@login_required(login_url='/login')
 def OrderView(request):
     if request.user.is_authenticated:
         user = request.user
@@ -277,14 +277,14 @@ def OrderView(request):
             print("Err", e)
     else:
         cookiesDatas = utils.cookiesData(request)
-        cartItem = cookiesDatas['cartItem'] 
-        order = cookiesDatas['orders'] 
-        items = cookiesDatas['items'] 
-    context = { 
+        cartItem = cookiesDatas['cartItem']
+        order = cookiesDatas['orders']
+        items = cookiesDatas['items']
+    context = {
         "cartItem": cartItem,
         "orderviews": orderviews,
         "orderimg": orderimg
-        
+
     }
     return render(request, "order.html", context)
 
@@ -325,7 +325,7 @@ def change_password(request):
             else:
                 messages.warning(request,"Old Password Not match")
                 return redirect('change_password')
-    
+
     return render(request, "change.html")
 
 
@@ -381,7 +381,7 @@ def forgetPassword(request, uidb64, token):
                 user.save()
                 messages.success(request, 'Change the password successfull, Please login')
                 return redirect('/')
-    else:       
+    else:
         return render(request, "failed.html")
 
     return render(request, "forgetPassword.html")
@@ -400,13 +400,13 @@ def forgetPassword(request, uidb64, token):
 #         cartItem = order.get_item_total
 #     else:
 #         cookiesDatas = utils.cookiesData(request)
-#         cartItem = cookiesDatas['cartItem'] 
-#         order = cookiesDatas['orders'] 
-#         items = cookiesDatas['items'] 
-#     context = { 
+#         cartItem = cookiesDatas['cartItem']
+#         order = cookiesDatas['orders']
+#         items = cookiesDatas['items']
+#     context = {
 #         "product": categories,
 #         "cartItem": cartItem
-        
+
 #     }
 #     return render(request, 'shirt.html', context)
 

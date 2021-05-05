@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'ecomproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'RajapandiRRP$mysql',
+        'NAME': 'RajapandiRRP$Raja',
         'USER': 'RajapandiRRP',
         'PASSWORD': 'pandian12',
         'HOST': 'RajapandiRRP.mysql.pythonanywhere-services.com',
