@@ -11,7 +11,7 @@ def cookiesData(req):
         cart = {}
     # print("sss")
     items = []
-    order = { 'get_cart_total': 0, 'get_item_total': 0}
+    order = { 'get_cart_total': 0, 'get_item_total': 0,'is_completed': False}
     cartItem = order['get_item_total']
     for i in cart:
         cartItem += cart[i]['quantity']

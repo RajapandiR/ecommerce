@@ -1,0 +1,68 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="col-md-8 border p-4">
+    <h3 class="mb-3">Finalize Checkout</h3>
+    <hr>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td><b>Name </b></td>
+                <td> {{ship.customer.username}} </td>
+            </tr>
+            <tr>
+                <td><b>Your Email ID </b></td>
+                <td> {{ship.customer}} </td>
+            </tr>
+            <tr>
+                <td><b>Address </b></td>
+                <td> {{ship.address}} {{ship.city}}</td>
+            </tr>
+            <tr>
+                <td><b>Sate </b></td>
+                <td> {{ship.state}} </td>
+            </tr>
+            <tr>
+                <td><b>Country </b></td>
+                <td> {{ship.country}} </td>
+            </tr>
+            <tr>
+                <td><b>Zipcode </b></td>
+                <td> {{ship.zipcode}} </td>
+            </tr>
+            <tr>
+                <td><b>Payment Option </b></td>
+                <td> {{ship.payment}} </td>
+            </tr>
+            <tr>
+                <td><b>Total Item </b></td>
+                <td> {{orders.get_item_total}} </td>
+            </tr>
+            <tr>
+                <td><b>Total Cost </b></td>
+                <td> {{orders.get_cart_total}} </td>
+            </tr>
+            
+                <!-- <button class="btn btn-success btn-lg btn-block" type="submit">Continue to
+                    checkout</button> -->
+                <!-- <td colspan="2">
+          
+                </td>
+            </tr> -->
+        </tbody>
+    </table>
+    <!-- <div class="d-block my-3" >
+        <input class="radio" type="radio" name="payment" value="Cash On Delivery" checked /> <span>Cash On Delivery</span>
+        <input class="radio" type="radio" name="payment" value="Credit card" /> <span>Credit card</span>
+        <input class="radio" type="radio" name="payment" value="Debit card" /> <span>Debit card</span>
+    </div> -->
+    <form action="{% url 'success' %}" >
+    <!-- {% csrf_token %} -->
+    <button class="btn btn-success btn-lg btn-block" type="submit">Continue to
+        checkout</button>
+</form>
+
+</div>
+
+{% endblock %}

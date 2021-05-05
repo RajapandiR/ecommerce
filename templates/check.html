@@ -4,13 +4,14 @@
 <div class="row">
     <div class="col-lg-6">
         <div class="box-element" id="form-wrapper">
-            <form id="form">
+            <form id="form" method="POST">
+                {% csrf_token %}
                 <div id="user-info">
                     <div class="form-field">
-                        <input required class="form-control" type="text" name="name" placeholder="Name..">
+                        <input required class="form-control" type="text" name="name" value="{{orders.customer.username}}"  placeholder="Name..">
                     </div>
                     <div class="form-field">
-                        <input required class="form-control" type="email" name="email" placeholder="Email..">
+                        <input required class="form-control" type="email" name="email" value="{{orders.customer}}" placeholder="Email..">
                     </div>
                 </div>
                 
@@ -19,7 +20,7 @@
                     <p>Shipping Information:</p>
                     <hr>
                     <div class="form-field">
-                        <input class="form-control" type="text" name="address" placeholder="Address..">
+                        <input class="form-control" type="text" name="address"  placeholder="Address..">
                     </div>
                     <div class="form-field">
                         <input class="form-control" type="text" name="city" placeholder="City..">
@@ -31,19 +32,20 @@
                         <input class="form-control" type="text" name="zipcode" placeholder="Zip code..">
                     </div>
                     <div class="form-field">
-                        <input class="form-control" type="text" name="country" placeholder="Zip code..">
+                        <input class="form-control" type="text" name="country" placeholder="Country">
                     </div>
                 </div>
-
+                <div class="d-block my-3" >
+                    <input class="radio" type="radio" name="payment" value="Cash On Delivery" checked /> <span>Cash On Delivery</span>
+                    <input class="radio" type="radio" name="payment" value="Credit card" /> <span>Credit card</span>
+                    <input class="radio" type="radio" name="payment" value="Debit card" /> <span>Debit card</span>
+                </div>
                 <hr>
                 <input id="form-button" class="btn btn-success btn-block" type="submit" value="Continue">
             </form>
         </div>
 
         <br>
-        <div class="box-element hidden" id="payment-info">
-            <small>Paypal Options</small>
-        </div>
         
     </div>
 
@@ -55,12 +57,14 @@
             <hr>
             
             {% for i in items %}
+            {% if orders.is_completed == False %}
             <div class="cart-row">
                 <div style="flex:2"><img class="row-image" src="{{i.product.image.url}}"></div>
                 <div style="flex:2"><p>{{i.product.name}}</p></div>
                 <div style="flex:1"><p>{{i.product.price}}</p></div>
                 <div style="flex:1"><p>{{i.quantity}}</p></div>
             </div>
+            {% endif %}
             {% endfor %}
             <h5>Items:  {{orders.get_item_total}}</h5>
             <h5>Total:  {{orders.get_cart_total}}</h5>

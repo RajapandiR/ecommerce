@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'ecomproject.wsgi.application'
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'ecomapp',
+#         'NAME': 'ecommerce3',
 #         'USER': 'root',
 #         'PASSWORD': '',
 #         'HOST': 'localhost',
