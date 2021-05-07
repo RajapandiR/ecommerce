@@ -128,6 +128,7 @@ class Shipping(models.Model):
 	city = models.CharField(max_length=100, null=True)
 	zipcode = models.CharField(max_length=100, null=True)
 	country = models.CharField(max_length=100, null=True)
+	phoneNo = models.IntegerField(null=True,blank=True)
 	payment = models.CharField(max_length=100,default='Cash on Delivery', choices=PAYMENT)
 	state = models.CharField(max_length=100, null=True)
 	created_on = models.DateTimeField(auto_now_add=True, null=True)
@@ -199,18 +200,18 @@ class OrderItem(models.Model):
 		return self.product.price * self.quantity
 class Order(models.Model):
 	def increment_order_number():
-		last_orderId = Order.objects.all().order_by('id').last()
-		if not last_orderId:
+		last_orderNo = Order.objects.all().order_by('id').last()
+		if not last_orderNo:
 		     return 'XXX0001'
-		orderId = last_orderId.orderId
-		invoice_int = int(orderId.split('XXX')[-1])
+		orderNo = last_orderNo.orderNo
+		invoice_int = int(orderNo.split('XXX')[-1])
 		width = 4
 		new_invoice_int = invoice_int + 1
 		formatted = (width - len(str(new_invoice_int))) * "0" + str(new_invoice_int)
-		new_invoice_no = 'XXX' + str(formatted)
-		return new_invoice_no
-
-	orderId = models.CharField(max_length=500, default=increment_order_number, null=True, blank=True)
+		new_order_no = 'XXX' + str(formatted)
+		return new_order_no
+	# orderNo = models.CharField(max_length=100, null=True)
+	orderNo = models.CharField(max_length=500, default=increment_order_number, null=True, blank=True)
 	cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
 	total = models.IntegerField(null=True, default=0)
 	method = models.CharField(max_length=100, null=True)
@@ -240,6 +241,18 @@ class ProductViewed(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+
+class Track(models.Model):
+	customer= models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+	order= models.ForeignKey(Order, on_delete=models.CASCADE, null=True, blank=True)
+	ordered= models.CharField(max_length=100, null=True, blank=True, default="active")
+	packed= models.CharField(max_length=100, null=True, blank=True)
+	shipped= models.CharField(max_length=100, null=True, blank=True)
+	delivery= models.CharField(max_length=100, null=True, blank=True)
+	status = models.CharField(max_length=100, null=True, blank=True, default="Ordered Confirmed")
+
+	def __str__(self):
+		return self.order.orderNo
 
 def product_viewed_signal_receiver(sender, instance, request, *args, **kwargs):
     c_type = ContentType.objects.get_for_model(sender)

@@ -11,14 +11,16 @@
         <th scope="col=2">Product</th>
         <th scope="col">Method</th>
         <th scope="col">Total cost</th>
+        <th scope="col">track</th>
         </tr>
     </thead>
     <tbody>
-    
+        
         {% for i in orderviews %}
+        {% if i.cart.customer == request.user %}
             <tr>
             <th scope="row">{{forloop.counter}}</th>
-            <td><b>{{i.orderId}}</b></td>
+            <td><b>{{i.orderNo}}</b></td>
             {% for j in orderimg %}
             {% if i.cart == j.cart %}
                 <td><img class="row-image" src="{{j.product.image.url}}"></p></td>
@@ -26,8 +28,11 @@
             {% endfor %}
             <td><b>{{i.method}}</b></td>
             <td><b>{{i.total}}</b></td>
+            <td><a class="btn btn-info" href="{% url 'tracks' i.id %}">Track</a></td>
             </tr>
+        {% endif %}
          {% endfor %}
+         
     
 </table>
 <!-- {% for i in items %}

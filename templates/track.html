@@ -1,0 +1,53 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+<h2>Track</h2>
+    <article class="card">
+        <header class="card-header"> My Orders / Tracking </header>
+        <div class="card-body">
+            <h6>Order ID: {{track.order.orderNo}}</h6>
+            <article class="card">
+                <div class="card-body row">
+                    <div class="col"> <strong>Estimated Delivery time:</strong> <br>15 May 2021 </div>
+                    <div class="col"> <strong>Shipping BY:</strong> <br> {{track.customer.username}}, | <i class="fa fa-phone"></i> +1598675986 </div>
+                    <div class="col"> <strong>Status:</strong> <br> {{track.status}} </div>
+                    {% comment %} <div class="col"> <strong>Tracking #:</strong> <br> BD045903594059 </div> {% endcomment %}
+                </div>
+            </article>
+            <div class="track">
+                <div class="step {{track.ordered}}"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order confirmed</span> </div>
+                <div class="step {{track.packed}}"> <span class="icon"> <i class="fa fa-user"></i> </span> <span class="text"> Picked by courier</span> </div>
+                <div class="step {{track.shipped}}" > <span class="icon"> <i class="fa fa-truck"></i> </span> <span class="text"> On the way </span> </div>
+                <div class="step {{track.delivery}}"> <span class="icon"> <i class="fa fa-box"></i> </span> <span class="text">Arrived</span> </div>
+            </div>
+            <hr>
+            {% comment %} <ul class="row">
+                <li class="col-md-4">
+                    <figure class="itemside mb-3">
+                        <div class="aside"><img src="https://i.imgur.com/iDwDQ4o.png" class="img-sm border"></div>
+                        <figcaption class="info align-self-center">
+                            <p class="title">Dell Laptop with 500GB HDD <br> 8GB RAM</p> <span class="text-muted">$950 </span>
+                        </figcaption>
+                    </figure>
+                </li>
+                <li class="col-md-4">
+                    <figure class="itemside mb-3">
+                        <div class="aside"><img src="https://i.imgur.com/tVBy5Q0.png" class="img-sm border"></div>
+                        <figcaption class="info align-self-center">
+                            <p class="title">HP Laptop with 500GB HDD <br> 8GB RAM</p> <span class="text-muted">$850 </span>
+                        </figcaption>
+                    </figure>
+                </li>
+                <li class="col-md-4">
+                    <figure class="itemside mb-3">
+                        <div class="aside"><img src="https://i.imgur.com/Bd56jKH.png" class="img-sm border"></div>
+                        <figcaption class="info align-self-center">
+                            <p class="title">ACER Laptop with 500GB HDD <br> 8GB RAM</p> <span class="text-muted">$650 </span>
+                        </figcaption>
+                    </figure>
+                </li>
+            </ul> {% endcomment %}
+            <hr> <a href="/order" class="btn btn-warning" data-abc="true"> <i class="fa fa-chevron-left"></i> Back to orders</a>
+        </div>
+    </article>
+{% endblock %}

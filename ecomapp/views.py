@@ -135,7 +135,7 @@ def check(req):
         items = order.orderitem_set.all()
         cartItem = order.get_item_total
         if cartItem == 0:
-            messages.warning(req,"Please products select")
+            messages.warning(req,"Please select the product")
             return redirect('cart')
         id = order.id
         if req.POST:
@@ -146,12 +146,15 @@ def check(req):
             zipcode= req.POST['zipcode']
             country= req.POST['country']
             payment= req.POST['payment']
+            phone_no=req.POST['phoneNo']
             obj = models.Cart.objects.get(id=id)
             obj.method = payment
             obj.save()
-            ship = models.Shipping.objects.get(customer= req.user)
-            if ship == None:
-                models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
+            try:
+                ship = models.Shipping.objects.get(customer= req.user)
+            except: 
+                pass
+                ship = models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment, phoneNo=phone_no)
             # ship = models.Shipping.objects.get(customer= req.user)
             context = {
                 "ship": ship,
@@ -186,8 +189,8 @@ def checkSuccess(request):
         obj.is_completed = True
         obj.address = ship
         obj.save()
-        
-        models.Order.objects.create(cart=order, total =tot, method=method, address=ship)
+        orderId = models.Order.objects.create(cart=order, total =tot, method=method, address=ship)
+        models.Track.objects.create(customer= request.user, order=orderId)
         # obj = models.CartItem.objects.get(order=id,is_completed=False)
         # print(id)
         # obj.is_completed = True
@@ -265,6 +268,7 @@ def OrderView(request):
         user = request.user
         orderimg = models.OrderItem.objects.all()
         orderviews = models.Order.objects.all()
+        print("orderviews.cart.customer",request.user)
         try:
             order= models.Cart.objects.get(customer=user, is_completed=False)
             items = order.orderitem_set.all()
@@ -288,6 +292,15 @@ def OrderView(request):
     }
     return render(request, "order.html", context)
 
+
+def TrackView(request, pk):
+    obj = models.Track.objects.get(order=pk)
+    print("obj", obj)
+    a = "active"
+    context = {
+        "track": obj
+    }
+    return render(request, "track.html", context)
 # @login_required
 # def change_password(request):
 #     if request.method == 'POST':

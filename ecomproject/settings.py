@@ -88,25 +88,25 @@ WSGI_APPLICATION = 'ecomproject.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'ecommerce3',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': 3306
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'RajapandiRRP$mysql',
-        'USER': 'RajapandiRRP',
-        'PASSWORD': 'pandian12',
-        'HOST': 'RajapandiRRP.mysql.pythonanywhere-services.com',
+        'NAME': 'ecommerce3',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': 3306
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'RajapandiRRP$mysql',
+#         'USER': 'RajapandiRRP',
+#         'PASSWORD': 'pandian12',
+#         'HOST': 'RajapandiRRP.mysql.pythonanywhere-services.com',
+#     }
+# }
 
 import dj_database_url
 

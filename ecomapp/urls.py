@@ -21,6 +21,7 @@ urlpatterns = [
     path('history/', views.UserProductHistory, name='history'),
     path('check-success/', views.checkSuccess, name='success'),
     path('order/', views.OrderView, name='order'),
+    path('track/<str:pk>/', views.TrackView, name='tracks'),
 
     # path('api/user', api.UserApiView.as_view()),
     # path('api/category/', api.CategoryApiView.as_view()),
