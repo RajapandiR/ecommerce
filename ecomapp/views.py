@@ -150,14 +150,11 @@ def check(req):
             obj = models.Cart.objects.get(id=id)
             obj.method = payment
             obj.save()
-<<<<<<< HEAD
             try:
                 ship = models.Shipping.objects.get(customer= req.user)
             except: 
                 pass
                 ship = models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment, phoneNo=phone_no)
-=======
->>>>>>> c4fb16c1a92e0441f1a6b2ba423cf4dc53fa833f
             # ship = models.Shipping.objects.get(customer= req.user)
             # if ship == None:
             models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
@@ -195,13 +192,9 @@ def checkSuccess(request):
         obj.is_completed = True
         obj.address = ship
         obj.save()
-<<<<<<< HEAD
         orderId = models.Order.objects.create(cart=order, total =tot, method=method, address=ship)
         models.Track.objects.create(customer= request.user, order=orderId)
-=======
-
         models.Order.objects.create(cart=order, total =tot, method=method, address=ship)
->>>>>>> c4fb16c1a92e0441f1a6b2ba423cf4dc53fa833f
         # obj = models.CartItem.objects.get(order=id,is_completed=False)
         # print(id)
         # obj.is_completed = True
