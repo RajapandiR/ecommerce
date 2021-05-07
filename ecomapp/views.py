@@ -149,10 +149,10 @@ def check(req):
             obj = models.Cart.objects.get(id=id)
             obj.method = payment
             obj.save()
-            # ship = models.Shipping.objects.get(customer= req.user)
-            # if ship == None:
-            models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
             ship = models.Shipping.objects.get(customer= req.user)
+            if ship == None:
+                models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
+            # ship = models.Shipping.objects.get(customer= req.user)
             context = {
                 "ship": ship,
                 'orders': order,
@@ -244,22 +244,15 @@ def productView(req, slug):
             cartItem = order.get_item_total
         except:
             pass
-            cartItem = 0 
+            cartItem = 0
 
     else:
         obj = get_object_or_404(models.Product,slug=slug)
         cookiesDatas = utils.cookiesData(req)
-<<<<<<< HEAD
         cartItem = cookiesDatas['cartItem']
-        order = cookiesDatas['orders']
-        items = cookiesDatas['items']
+        # order = cookiesDatas['orders']
+        # items = cookiesDatas['items']
 
-=======
-        cartItem = cookiesDatas['cartItem'] 
-        # order = cookiesDatas['orders'] 
-        # items = cookiesDatas['items'] 
-        
->>>>>>> ebefaa426175896f2cf7b6ac3c94d530144fc7f2
     context = {
         "cartItem": cartItem,
         "product": obj
@@ -428,15 +421,15 @@ def UserProductHistory(request):
             cartItem = order.get_item_total
         except:
             pass
-            cartItem = 0 
+            cartItem = 0
 
     else:
         obj = get_object_or_404(models.Product,slug=slug)
         cookiesDatas = utils.cookiesData(req)
-        cartItem = cookiesDatas['cartItem'] 
-        # order = cookiesDatas['orders'] 
-        # items = cookiesDatas['items'] 
-            
+        cartItem = cookiesDatas['cartItem']
+        # order = cookiesDatas['orders']
+        # items = cookiesDatas['items']
+
     context = {
         "qs": qs,
         "cartItem": cartItem,
