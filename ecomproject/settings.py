@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 
-# import django_heroku 
+# import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -63,7 +63,7 @@ ROOT_URLCONF = 'ecomproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': ['/home/RajapandiRRP/ecommerce/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -88,25 +88,25 @@ WSGI_APPLICATION = 'ecomproject.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ecommerce3',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': 3306
-    }
-}
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'RajapandiRRP$mysql',
-#         'USER': 'RajapandiRRP',
-#         'PASSWORD': 'pandian12',
-#         'HOST': 'RajapandiRRP.mysql.pythonanywhere-services.com',
+#         'NAME': 'ecommerce3',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': 3306
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'RajapandiRRP$mysql',
+        'USER': 'RajapandiRRP',
+        'PASSWORD': 'pandian12',
+        'HOST': 'RajapandiRRP.mysql.pythonanywhere-services.com',
+    }
+}
 
 import dj_database_url
 
