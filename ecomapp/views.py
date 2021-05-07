@@ -135,7 +135,7 @@ def check(req):
         items = order.orderitem_set.all()
         cartItem = order.get_item_total
         if cartItem == 0:
-            messages.warning(req,"Please products select")
+            messages.warning(req,"Please select the product")
             return redirect('cart')
         id = order.id
         if req.POST:
@@ -146,9 +146,24 @@ def check(req):
             zipcode= req.POST['zipcode']
             country= req.POST['country']
             payment= req.POST['payment']
+            phone_no=req.POST['phoneNo']
             obj = models.Cart.objects.get(id=id)
             obj.method = payment
             obj.save()
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            try:
+                ship = models.Shipping.objects.get(customer= req.user)
+            except: 
+                pass
+                ship = models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment, phoneNo=phone_no)
+=======
+>>>>>>> c4fb16c1a92e0441f1a6b2ba423cf4dc53fa833f
+            # ship = models.Shipping.objects.get(customer= req.user)
+            # if ship == None:
+            models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
+>>>>>>> a7dd703da8f1077e2e58c42529d8084c5565d28a
             ship = models.Shipping.objects.get(customer= req.user)
             if ship == None:
                 models.Shipping.objects.create(customer=req.user, address=address, city=city, state=state, zipcode=zipcode, country=country,payment=payment)
@@ -186,8 +201,13 @@ def checkSuccess(request):
         obj.is_completed = True
         obj.address = ship
         obj.save()
+<<<<<<< HEAD
+        orderId = models.Order.objects.create(cart=order, total =tot, method=method, address=ship)
+        models.Track.objects.create(customer= request.user, order=orderId)
+=======
 
         models.Order.objects.create(cart=order, total =tot, method=method, address=ship)
+>>>>>>> c4fb16c1a92e0441f1a6b2ba423cf4dc53fa833f
         # obj = models.CartItem.objects.get(order=id,is_completed=False)
         # print(id)
         # obj.is_completed = True
@@ -249,10 +269,16 @@ def productView(req, slug):
     else:
         obj = get_object_or_404(models.Product,slug=slug)
         cookiesDatas = utils.cookiesData(req)
+<<<<<<< HEAD
         cartItem = cookiesDatas['cartItem']
         # order = cookiesDatas['orders']
         # items = cookiesDatas['items']
 
+=======
+        cartItem = cookiesDatas['cartItem'] 
+        # order = cookiesDatas['orders'] 
+        # items = cookiesDatas['items'] 
+>>>>>>> a7dd703da8f1077e2e58c42529d8084c5565d28a
     context = {
         "cartItem": cartItem,
         "product": obj
@@ -265,6 +291,7 @@ def OrderView(request):
         user = request.user
         orderimg = models.OrderItem.objects.all()
         orderviews = models.Order.objects.all()
+        print("orderviews.cart.customer",request.user)
         try:
             order= models.Cart.objects.get(customer=user, is_completed=False)
             items = order.orderitem_set.all()
@@ -288,6 +315,15 @@ def OrderView(request):
     }
     return render(request, "order.html", context)
 
+
+def TrackView(request, pk):
+    obj = models.Track.objects.get(order=pk)
+    print("obj", obj)
+    a = "active"
+    context = {
+        "track": obj
+    }
+    return render(request, "track.html", context)
 # @login_required
 # def change_password(request):
 #     if request.method == 'POST':
